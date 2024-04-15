@@ -36,4 +36,9 @@ fi
 kaggle datasets download -d simiotic/ethereum-nfts -p $DATA_DIR
 deactivate
 unzip $DATA_DIR/ethereum-nfts.zip -d $DATA_DIR
-python3 $SCRIPTS_DIR/load_data.py $DATA_DIR/nfts.sqlite --host $POSTGRES_HOST --port $POSGRES_PORT --user $POSTGRES_USER --password $POSTGRES_PASS
+python3 $SCRIPTS_DIR/load_data.py $DATA_DIR/nfts.sqlite \
+  --host $POSTGRES_HOST \
+  --port $POSGRES_PORT \
+  --user $POSTGRES_USER \
+  --password $POSTGRES_PASS \
+  --dbname $POSTGRED_DB
