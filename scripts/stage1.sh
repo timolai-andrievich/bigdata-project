@@ -1,7 +1,7 @@
 #!/bin/bash
 
 POSTGRES_USER=team31
-POSTGRES_HOST=localhost
+POSTGRES_HOST=hadoop-04.uni.innopolis.ru
 POSTGRES_PASS=$(cat $HOME/.secrets/.psql.pass)
 POSGRES_PORT=5432
 POSTGRED_DB=team31_projectdb

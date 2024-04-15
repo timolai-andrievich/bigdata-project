@@ -14,6 +14,11 @@ CREATE TABLE nfts
         symbol TEXT,
         UNIQUE(address, name, symbol)
     );
+DROP TABLE IF EXISTS checkpoint;
+CREATE TABLE checkpoint(
+    event_type TEXT,
+    offset INT
+);
 DROP TABLE IF EXISTS transfer_values_quartile_10_distribution_per_address;
 CREATE TABLE transfer_values_quartile_10_distribution_per_address(
   address TEXT,
