@@ -10,8 +10,8 @@ function clear_dir {
   fi
 }
 
-clear_dir($DATA_DIR)
-clear_dir($VENV)
+clear_dir $DATA_DIR
+clear_dir $VENV
 
 # Create a python environment
 python3 -m venv $VENV
