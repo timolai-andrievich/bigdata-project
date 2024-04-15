@@ -1,11 +1,12 @@
 #!/usr/bin/python3
+# TODO split into separate scripts
 import argparse
 import sqlite3
 
 import psycopg2
 import tqdm.autonotebook as tqdm
 
-create_tables = '''
+CREATE_TABLES = '''
 DROP TABLE IF EXISTS nfts CASCADE;
 CREATE TABLE nfts
     (
@@ -112,6 +113,11 @@ CREATE TABLE IF NOT EXISTS "transfers"
 
 
 def parse_args():
+    """Parses arguments from the command line.
+
+    Returns:
+        Namespace: Namespace with the parsed arguments.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('sqlite_file')
     parser.add_argument('--user')
@@ -127,6 +133,8 @@ def parse_args():
 
 
 def main():
+    """Entry point of the program.
+    """
     args = parse_args()
     conn_sqlite = sqlite3.connect(args.sqlite_file)
     conn_postgres = psycopg2.connect(
@@ -138,7 +146,7 @@ def main():
     )
     cursor_sqlite = conn_sqlite.cursor()
     cursor_postgres = conn_postgres.cursor()
-    cursor_postgres.execute(create_tables)
+    cursor_postgres.execute(CREATE_TABLES)
     cursor_sqlite.execute("SELECT name FROM sqlite_master WHERE type='table';")
     table_names = [name[0] for name in cursor_sqlite.fetchall()]
     for table_name in table_names:
@@ -160,7 +168,8 @@ def main():
                 if not rows:
                     break
                 records_list_template = ','.join(['%s'] * len(rows))
-                insert_query = f"INSERT INTO {table_name} ({col_names}) VALUES {records_list_template};"
+                insert_query = (f"INSERT INTO {table_name} ({col_names})"
+                                f" VALUES {records_list_template};")
                 cursor_postgres.execute(insert_query, rows)
                 pbar.update(n=len(rows))
     conn_postgres.commit()
