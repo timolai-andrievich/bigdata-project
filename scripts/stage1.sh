@@ -4,11 +4,13 @@
 VENV=$HOME/.venv/
 python3 -m venv $VENV
 source $VENV/bin/activate
-pip3 install tqdm
+pip3 install kaggle
+
+if ( ! -f $HOME/kaggle/kaggle.json ) then
+  echo "Please put your Kaggle API key into ~/.kaggle/"
+  exit 1
+fi
 
 # Download the dataset
-# url='https://disk.yandex.ru/d/Rb-ui8R5S9u-uA'
-# compressed_database=$HOME/data/database.sql.lzma
-# wget "$(yadisk-direct $url)" -O $HOME/data/dataset.sql.lzma
-# cd $HOME/data/
-
+kaggle datasets download -d simiotic/ethereum-nfts -p ./data
+unzip ethereum-nfts.zip
