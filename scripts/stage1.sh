@@ -1,5 +1,11 @@
 #!/bin/bash
 
+POSTGRES_USER=team31
+POSTGRES_HOST=localhost
+POSGRES_PORT=5432
+POSTGRED_DB=team31_projectdb
+
+SCRIPTS_DIR=$(dirname $0)
 DATA_DIR=$(pwd)/data
 VENV=$HOME/.venv/
 
@@ -26,4 +32,6 @@ fi
 
 # Download the dataset
 kaggle datasets download -d simiotic/ethereum-nfts -p $DATA_DIR
-unzip $DATA_DIR/ethereum-nfts.zip
+deactivate
+unzip $DATA_DIR/ethereum-nfts.zip -d $DATA_DIR
+python3 $SCRIPTS_DIR/load_data.py $DATA_DIR/nfts.sqlite --host $POSTGRES_HOST --port $POSGRES_PORT --user $POSTGRES_USER --password $POSTGRES_PASS
