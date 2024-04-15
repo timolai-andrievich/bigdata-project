@@ -2,6 +2,7 @@
 
 POSTGRES_USER=team31
 POSTGRES_HOST=localhost
+POSTGRES_PASS=$(cat $HOME/.secrets/.psql.pass)
 POSGRES_PORT=5432
 POSTGRED_DB=team31_projectdb
 
@@ -13,6 +14,7 @@ function clear_dir {
   if [ -d $1 ]
   then
     rm -r $1
+    mkdir $1
   fi
 }
 
