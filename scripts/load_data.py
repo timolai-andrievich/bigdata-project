@@ -17,7 +17,7 @@ CREATE TABLE nfts
 DROP TABLE IF EXISTS checkpoint;
 CREATE TABLE checkpoint(
     event_type TEXT,
-    offset INT
+    offset_ INT
 );
 DROP TABLE IF EXISTS transfer_values_quartile_10_distribution_per_address;
 CREATE TABLE transfer_values_quartile_10_distribution_per_address(
@@ -142,6 +142,8 @@ def main():
     cursor_sqlite.execute("SELECT name FROM sqlite_master WHERE type='table';")
     table_names = [name[0] for name in cursor_sqlite.fetchall()]
     for table_name in table_names:
+        if table_name == 'checkpoint':
+            continue
         cursor_sqlite.execute(f"PRAGMA table_info({table_name});")
         column_names = [column[1] for column in cursor_sqlite.fetchall()]
         n_rows, = cursor_sqlite.execute(
