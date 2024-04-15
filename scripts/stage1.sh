@@ -4,9 +4,10 @@
 VENV=$HOME/.venv/
 python3 -m venv $VENV
 source $VENV/bin/activate
-pip3 install kaggle
+pip3 install kaggle > /dev/null
 
-if ( ! -f $HOME/kaggle/kaggle.json ) then
+if [ ! -f $HOME/kaggle/kaggle.json ] 
+then
   echo "Please put your Kaggle API key into ~/.kaggle/"
   exit 1
 fi
