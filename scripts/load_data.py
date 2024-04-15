@@ -122,7 +122,7 @@ def parse_args():
     parser.add_argument('--batch_size',
                         metavar='batch-size',
                         type=int,
-                        default=10000)
+                        default=100)
     return parser.parse_args()
 
 
