@@ -48,6 +48,10 @@ kaggle datasets download -d simiotic/ethereum-nfts -p $DATA_DIR
 deactivate
 unzip $DATA_DIR/ethereum-nfts.zip -d $DATA_DIR
 
+# Sample from the dataset
+python3 $SCRIPTS_DIR/sample.py $DATA_DIR/nfts.sqlite $DATA_DIR sampled.sqlite
+mv $DATA_DIR/sampled.sqlite $DATA_DIR/nfts.sqlite
+
 # Load the data into Postgres database
 python3 $SCRIPTS_DIR/load_data.py $DATA_DIR/nfts.sqlite \
   --host $POSTGRES_HOST \
