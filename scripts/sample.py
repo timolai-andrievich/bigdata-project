@@ -211,6 +211,7 @@ def main():
     input_cursor.execute('DROP TABLE IF EXISTS sampled_tokens;')
     input_cursor.close()
     input_sqlite.close()
+    output_cursor.execute("COMMIT;")
     output_cursor.close()
     output_sqlite.close()
 

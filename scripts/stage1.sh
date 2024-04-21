@@ -16,7 +16,7 @@ POSTGRED_DB=team31_projectdb
 REPO_DIR=$(dirname $0)/..
 SCRIPTS_DIR=$(dirname $0)
 DATA_DIR=$(pwd)/data
-VENV=$HOME/.venv/
+VENV=$(pwd)/.venv/
 HDFS_CHECKPOINT=project/warehouse
 
 function clear_dir {
@@ -54,7 +54,7 @@ deactivate
 unzip $DATA_DIR/ethereum-nfts.zip -d $DATA_DIR
 
 # Sample from the dataset
-python3 $SCRIPTS_DIR/sample.py $DATA_DIR/nfts.sqlite $DATA_DIR sampled.sqlite
+python3 $SCRIPTS_DIR/sample.py $DATA_DIR/nfts.sqlite $DATA_DIR/sampled.sqlite
 mv $DATA_DIR/sampled.sqlite $DATA_DIR/nfts.sqlite
 
 # Load the data into Postgres database
