@@ -3,6 +3,11 @@
 # Set the postgres login information
 POSTGRES_USER=team31
 POSTGRES_HOST=hadoop-04.uni.innopolis.ru
+if ! ping -c 1 $POSTGRES_HOST
+then
+  echo "Couldn't resolve $POSTGRES_HOST, using IP 10.100.30.60 instead"
+  POSTGRES_HOST=10.100.30.60
+fi
 POSTGRES_PASS=$(cat $HOME/.secrets/.psql.pass)
 POSGRES_PORT=5432
 POSTGRED_DB=team31_projectdb
