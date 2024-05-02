@@ -1,6 +1,6 @@
 #!/bin/bash
 REPO_DIR=$(dirname $0)/../
-echo 'DROP DATABASE IF EXISTS team31_projectdb CASCADE'
+echo 'DROP DATABASE IF EXISTS team31_projectdb CASCADE;'
 echo 'CREATE DATABASE team31_projectdb LOCATION "project/hive/warehouse";'
 echo 'USE team31_projectdb;'
 find $REPO_DIR/output/*.avsc -printf "%f\n" | while read line; do

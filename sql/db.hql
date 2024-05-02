@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS team31_projectdb CASCADE
+DROP DATABASE IF EXISTS team31_projectdb CASCADE;
 CREATE DATABASE team31_projectdb LOCATION "project/hive/warehouse";
 USE team31_projectdb;
 CREATE EXTERNAL TABLE checkpoint STORED AS AVRO LOCATION 'project/warehouse/checkpoint' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/checkpoint.avsc');
