@@ -9,7 +9,7 @@ HDFS_CHECKPOINT=project/warehouse
 HIVE_DIR=project/hive/warehouse
 AVSC_DIR=$HDFS_CHECKPOINT/avsc
 
-HIVE_PASSWORD=$(head -n 1 secrets/.hive.pass)
+HIVE_PASSWORD=$(cat ~/.secrets/.hive.pass)
 HIVE_HOST=jdbc:hive2://hadoop-03.uni.innopolis.ru:10001
 
 function clear_hdfs_dir {
