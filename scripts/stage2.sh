@@ -22,5 +22,6 @@ function clear_hdfs_dir {
 
 clear_hdfs_dir $AVSC_DIR
 clear_hdfs_dir $HIVE_DIR
-hdfs -put $REPO_DIR/output/*.avsc $AVSC_DIR
+
+hdfs dfs -put $REPO_DIR/output/*.avsc $AVSC_DIR
 beeline -u $HIVE_HOST -n team31 -p $HIVE_PASSWORD -f $REPO_DIR/sql/db.hql > $REPO_DIR/output/hive_results.txt
