@@ -54,10 +54,10 @@ INSERT INTO current_market_values_clustered SELECT * FROM current_market_values;
 DROP TABLE current_market_values;
 ALTER TABLE current_market_values_clustered RENAME TO current_market_values;
 
-CREATE EXTERNAL TABLE current_owners_clustered CLUSTERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/current_owners_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/current_owners.avsc');
-INSERT INTO current_owners_clustered SELECT * FROM current_owners;
-DROP TABLE current_owners;
-ALTER TABLE current_owners_clustered RENAME TO current_owners;
+-- CREATE EXTERNAL TABLE current_owners_clustered CLUSTERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/current_owners_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/current_owners.avsc');
+-- INSERT INTO current_owners_clustered SELECT * FROM current_owners;
+-- DROP TABLE current_owners;
+-- ALTER TABLE current_owners_clustered RENAME TO current_owners;
 
 CREATE EXTERNAL TABLE market_values_distribution_clustered CLUSTERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/market_values_distribution_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/market_values_distribution.avsc');
 INSERT INTO market_values_distribution_clustered SELECT * FROM market_values_distribution;
