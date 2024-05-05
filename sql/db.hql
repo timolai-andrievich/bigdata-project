@@ -38,7 +38,7 @@ INSERT INTO TABLE current_owners_partitioned PARTITION (first_address_letter)
 SELECT *, substr(nft_address, 3, 1) as first_address_letter FROM current_owners;
 
 DROP TABLE current_owners;
-ALTER TABLE current_owners_partitioned RENAME TO current_owners;
+-- ALTER TABLE current_owners_partitioned RENAME TO current_owners;
 
 -- Check if the data can be accessed
 SELECT * FROM current_owners LIMIT 10;
