@@ -41,7 +41,7 @@ DROP TABLE current_owners;
 -- ALTER TABLE current_owners_partitioned RENAME TO current_owners;
 
 -- Check if the data can be accessed
-SELECT * FROM current_owners LIMIT 10;
+SELECT * FROM current_owners_partitioned LIMIT 10;
 
 -- Bucket all other tables
 CREATE EXTERNAL TABLE checkpoint_clustered CLUSTERED BY (event_type) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/checkpoint_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/checkpoint.avsc');
