@@ -104,12 +104,12 @@ INSERT INTO transfer_statistics_by_address_clustered SELECT * FROM transfer_stat
 DROP TABLE transfer_statistics_by_address;
 ALTER TABLE transfer_statistics_by_address_clustered RENAME TO transfer_statistics_by_address;
 
-CREATE EXTERNAL TABLE transfer_values_quantile_10_distribution_per_address_clustered CLUSTERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/transfer_values_quantile_10_distribution_per_address_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_values_quantile_10_distribution_per_address.avsc');
+CREATE EXTERNAL TABLE transfer_values_quantile_10_distribution_per_address_clustered CLUSTERED BY (address) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/transfer_values_quantile_10_distribution_per_address_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_values_quantile_10_distribution_per_address.avsc');
 INSERT INTO transfer_values_quantile_10_distribution_per_address_clustered SELECT * FROM transfer_values_quantile_10_distribution_per_address;
 DROP TABLE transfer_values_quantile_10_distribution_per_address;
 ALTER TABLE transfer_values_quantile_10_distribution_per_address_clustered RENAME TO transfer_values_quantile_10_distribution_per_address;
 
-CREATE EXTERNAL TABLE transfer_values_quantile_25_distribution_per_address_clustered CLUSTERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/transfer_values_quantile_25_distribution_per_address_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_values_quantile_25_distribution_per_address.avsc');
+CREATE EXTERNAL TABLE transfer_values_quantile_25_distribution_per_address_clustered CLUSTERED BY (address) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/transfer_values_quantile_25_distribution_per_address_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_values_quantile_25_distribution_per_address.avsc');
 INSERT INTO transfer_values_quantile_25_distribution_per_address_clustered SELECT * FROM transfer_values_quantile_25_distribution_per_address;
 DROP TABLE transfer_values_quantile_25_distribution_per_address;
 ALTER TABLE transfer_values_quantile_25_distribution_per_address_clustered RENAME TO transfer_values_quantile_25_distribution_per_address;
