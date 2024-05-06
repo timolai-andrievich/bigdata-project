@@ -3,7 +3,7 @@ USE team31_projectdb;
 DROP TABLE IF EXISTS q1_results;
 CREATE TABLE q1_results(
   token_id STRING,
-  timestamp INTEGER
+  timestamp INT
 ) 
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
