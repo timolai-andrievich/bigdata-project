@@ -1,4 +1,4 @@
-SET hive.execution.engine=spark;
+SET hive.execution.engine=tez;
 
 USE team31_projectdb;
 
