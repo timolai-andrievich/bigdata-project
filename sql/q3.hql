@@ -3,7 +3,7 @@ USE team31_projectdb;
 DROP TABLE IF EXISTS q3_results;
 CREATE TABLE q3_results(
   event_id STRING,
-  transaction_value REAL
+  transaction_value DOUBLE
 ) 
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
