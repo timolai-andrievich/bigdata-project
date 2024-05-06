@@ -10,7 +10,7 @@ FIELDS TERMINATED BY ','
 LOCATION 'project/hive/warehouse/q1';
 
 INSERT INTO q1_results(token_id, timestamp_)
-SELECT token_id, timestamp from transfers;
+SELECT token_id, transfers.timestamp as timestamp_ from transfers;
 
 INSERT OVERWRITE DIRECTORY 'project/output/q1' 
 ROW FORMAT DELIMITED FIELDS 
