@@ -25,3 +25,8 @@ clear_hdfs_dir $HIVE_DIR
 
 hdfs dfs -put $REPO_DIR/output/*.avsc $AVSC_DIR
 beeline -u $HIVE_HOST -n team31 -p $HIVE_PASSWORD -f $REPO_DIR/sql/db.hql > $REPO_DIR/output/hive_results.txt
+for i in {1..5} ;
+do
+  beeline -u $HIVE_HOST -n team31 -p $HIVE_PASSWORD -f "$REPO_DIR/sql/q${i}.hql"
+  hdfs dfs -cat "project/hive/warehouse/q${i}/*" > "${REPO_DIR}/output/q${i}.csv"
+done
