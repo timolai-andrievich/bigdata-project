@@ -12,7 +12,7 @@ LOCATION 'project/hive/warehouse/q5';
 INSERT INTO q5_results(nft_address, tokens)
 SELECT nfts.address, count(DISTINCT mints.token_id)
 FROM nfts LEFT OUTER JOIN mints ON nfts.address = mints.nft_address
-GROUP BY nfts.address ORDER BY tokens ASC;
+GROUP BY nfts.address;
 
 INSERT OVERWRITE DIRECTORY 'project/output/q5' 
 ROW FORMAT DELIMITED FIELDS 
