@@ -10,7 +10,9 @@ FIELDS TERMINATED BY ','
 LOCATION 'project/hive/warehouse/q1';
 
 INSERT INTO q1_results(token_id, `timestamp`)
-SELECT token_id, `timestamp` from transfers;
+SELECT token_id, `timestamp` FROM transfers
+-- Uniformly sample (roughly 100,000 items from the table)
+WHERE rand() < (SELECT 100000.0 / count(*) FROM transfers);
 
 INSERT OVERWRITE DIRECTORY 'project/output/q1' 
 ROW FORMAT DELIMITED FIELDS 
