@@ -1,6 +1,8 @@
 -- Setting Hive options
 SET hive.exec.dynamic.partition = true;
 SET hive.exec.dynamic.partition.mode = nonstrict;
+SET hive.exec.compress.output=true;
+SET avro.output.codec=snappy;
 
 -- (Re)create the team database
 DROP DATABASE IF EXISTS team31_projectdb CASCADE;
