@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+"""A simple script to sample the data from the dataset to prevent excessive
+disk usage.
+"""
 import argparse
 import random
 import sqlite3
@@ -25,12 +27,12 @@ CREATE TABLE checkpoint
 DROP TABLE IF EXISTS mints;
 CREATE TABLE mints
     (
-        event_id TEXT NOT NULL UNIQUE ON CONFLICT FAIL,
+        event_id TEXT NOT NULL UNIQUE,
         transaction_hash TEXT,
         block_number INTEGER,
         nft_address TEXT REFERENCES nfts(address),
-        token_id TEXT,
         from_address TEXT,
+        token_id TEXT,
         to_address TEXT,
         transaction_value INTEGER,
         timestamp INTEGER
@@ -39,12 +41,12 @@ CREATE TABLE mints
 DROP TABLE IF EXISTS transfers;
 CREATE TABLE transfers
     (
-        event_id TEXT NOT NULL UNIQUE ON CONFLICT FAIL,
+        event_id TEXT NOT NULL UNIQUE,
         transaction_hash TEXT,
         block_number INTEGER,
         nft_address TEXT REFERENCES nfts(address),
-        token_id TEXT,
         from_address TEXT,
+        token_id TEXT,
         to_address TEXT,
         transaction_value INTEGER,
         timestamp INTEGER
@@ -198,7 +200,6 @@ def main():
             continue
         input_cursor.execute(f"PRAGMA table_info({table_name});")
         column_names = [column[1] for column in input_cursor.fetchall()]
-        col_names = ", ".join(column_names)
         if 'token_id' not in column_names:
             n_rows, = input_cursor.execute(
                 f'select count(*) from {table_name};').fetchone()
@@ -221,7 +222,9 @@ def main():
                 row = input_cursor.fetchone()
                 if not row:
                     break
-                insert_query = f"INSERT INTO {table_name} ({col_names}) VALUES ({','.join('?' for _ in row)});"
+                insert_query = (f"INSERT INTO {table_name} "
+                                f"({','.join(column_names)}) "
+                                f"VALUES ({','.join('?' for _ in row)});")
                 output_cursor.execute(insert_query, row)
                 pbar.update(1)
     input_cursor.execute('DROP TABLE IF EXISTS sampled_tokens;')

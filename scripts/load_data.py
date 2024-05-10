@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+"""A simple script to load the data from the Sqlite database into the
+Postgres database.
+"""
 import argparse
 import sqlite3
 
