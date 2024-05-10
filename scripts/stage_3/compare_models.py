@@ -2,18 +2,20 @@
 This script loads trained models and their predictions,
 and then evaluates them and saves the report
 """
+from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.regression import LinearRegressionModel, GBTRegressionModel
+from pyspark.sql import SparkSession
 
-from scripts.stage_3.train_models import (
-    create_session,
-    get_rmse_evaluator,
-    get_r2_evaluator,
-)
+TEAM_ID = "team31"
 
 
 def main() -> None:
     """Entry point for comparison script"""
-    spark = create_session("comparing models")
+    spark = (
+        SparkSession.builder.appName(f"{TEAM_ID} - spark ML - comparing models")
+        .master("yarn")
+        .getOrCreate()
+    )
     model1 = LinearRegressionModel.load(  # pylint: disable=no-member
         "project/models/model1"
     )
@@ -26,7 +28,12 @@ def main() -> None:
         "project/output/model2_predictions.csv", header=True, inferSchema=True
     )
 
-    rmse_evaluator, r2_evaluator = get_rmse_evaluator(), get_r2_evaluator()
+    rmse_evaluator = RegressionEvaluator(
+        labelCol="label", predictionCol="prediction", metricName="rmse"
+    )
+    r2_evaluator = RegressionEvaluator(
+        labelCol="label", predictionCol="prediction", metricName="r2"
+    )
 
     rmse_1 = rmse_evaluator.evaluate(model1_predictions)
     rmse_2 = rmse_evaluator.evaluate(model2_predictions)
