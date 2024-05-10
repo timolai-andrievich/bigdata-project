@@ -13,8 +13,8 @@ echo "Finished copying data!"
 
 # Compress data
 echo "Compressing data..."
-gzip -k -9 data/train.json
-gzip -k -9 data/test.json
+gzip -c -9 data/train.json > data/train.json.gz
+gzip -c -9 data/test.json > data/test.json.gz
 echo "Finished compressing data!"
 
 # Train first and second models
