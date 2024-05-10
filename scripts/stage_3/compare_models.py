@@ -3,7 +3,6 @@ This script loads trained models and their predictions,
 and then evaluates them and saves the report
 """
 from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.ml.regression import LinearRegressionModel, GBTRegressionModel
 from pyspark.sql import SparkSession
 
 TEAM_ID = "team31"
@@ -16,10 +15,6 @@ def main() -> None:
         .master("yarn")
         .getOrCreate()
     )
-    model1 = LinearRegressionModel.load(  # pylint: disable=no-member
-        "project/models/model1"
-    )
-    model2 = GBTRegressionModel.load("project/models/model2")
 
     model1_predictions = spark.read.csv(
         "project/output/model1_predictions.csv", header=True, inferSchema=True
@@ -41,7 +36,10 @@ def main() -> None:
     r2_score_1 = r2_evaluator.evaluate(model1_predictions)
     r2_score_2 = r2_evaluator.evaluate(model2_predictions)
 
-    models = [[str(model1), rmse_1, r2_score_1], [str(model2), rmse_2, r2_score_2]]
+    models = [
+        ["Linear Regression", rmse_1, r2_score_1],
+        ["Gradient Boosted Trees", rmse_2, r2_score_2],
+    ]
 
     comparison_report = spark.createDataFrame(models, ["model", "RMSE", "R2"])
 
