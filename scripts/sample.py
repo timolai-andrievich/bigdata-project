@@ -121,6 +121,11 @@ CREATE TABLE ownership_transitions(
 
 
 def parse_args():
+    """Parses command line arguments.
+
+    Returns:
+        argparse.Namespace: Namespace with parsed arguments.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('input_db')
     parser.add_argument('output_db')
@@ -133,6 +138,15 @@ def parse_args():
 
 
 def batchify(iterable, batch_size):
+    """Batches an iterable.
+
+    Args:
+        iterable(Iterable[T]): Iterable to batchify.
+        batch_size (int): Size of returned batches.
+
+    Yields:
+        list[T]: Batch of size less than batch_size.
+    """
     batch = []
     for item in iterable:
         batch.append(item)
@@ -150,6 +164,8 @@ SKIP_TABLES = [
 
 
 def main():
+    """Entry point of the program.
+    """
     args = parse_args()
     input_sqlite = sqlite3.connect(args.input_db)
     input_cursor = input_sqlite.cursor()

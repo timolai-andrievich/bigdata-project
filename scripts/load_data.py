@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# TODO split into separate scripts
 import argparse
 import sqlite3
 
