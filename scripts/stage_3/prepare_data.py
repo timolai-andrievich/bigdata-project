@@ -116,7 +116,9 @@ class DateCyclicalEncodingTransformer(  # pylint: disable=too-many-ancestors
         )
 
 
-def make_pipeline(date_cols: List[str], text_cols: List[str]) -> Pipeline:
+def make_pipeline(
+    date_cols: List[str], text_cols: List[str], numerical_cols: List[str]
+) -> Pipeline:
     """Returns a pipeline for feature extraction"""
     tokenizer = Tokenizer(inputCol=text_cols[0], outputCol=text_cols[0] + "_tokens")
     word2vec = Word2Vec(
@@ -130,8 +132,10 @@ def make_pipeline(date_cols: List[str], text_cols: List[str]) -> Pipeline:
         DateCyclicalEncodingTransformer(input_col=col, output_col="encoded_" + col)
         for col in date_cols
     ]
-    cols_to_assemble = [text_cols[0] + "_w2v"] + sum(
-        (dt.get_all_column_names() for dt in date_transformers), []
+    cols_to_assemble = (
+        [text_cols[0] + "_w2v"]
+        + sum((dt.get_all_column_names() for dt in date_transformers), [])
+        + numerical_cols
     )
 
     assembler = VectorAssembler(inputCols=cols_to_assemble, outputCol="raw_features")
@@ -218,9 +222,16 @@ def make_features(spark: SparkSession) -> DataFrame:
             get_last_n_txs("tx_data_except_last", F.lit(LAST_N_TX)),
         )
         .drop("tx_data_except_last")
-        # History for the last N transactions
-        .withColumn("tx_values", F.col("last_n_transactions.transaction_value"))
-        .withColumn("tx_timestamps", F.col("last_n_transactions.timestamp"))
+        # Stats for the last N transactions
+        .withColumn(
+            "min_n_tx_value", F.array_min("last_n_transactions.transaction_value")
+        )
+        .withColumn(
+            "max_n_tx_value", F.array_max("last_n_transactions.transaction_value")
+        )
+        .withColumn(
+            "first_n_tx_timestamp", F.element_at("last_n_transactions.timestamp", 1)
+        )
         .drop("last_n_transactions")
     )
 
@@ -263,8 +274,20 @@ def main() -> None:
         "last_mint_date",
         "first_tx_timestamp",
         "last_tx_timestamp",
+        "first_n_tx_timestamp",
     ]
     text_cols = ["name"]
+    numerical_cols = [
+        "num_tokens",
+        "avg_mint_price",
+        "max_mint_price",
+        "min_mint_price",
+        "tx_count",
+        "min_tx_value",
+        "max_tx_value",
+        "min_n_tx_value",
+        "max_n_tx_value",
+    ]
 
     filtered_features_with_dt = filtered_features.selectExpr(
         *(
@@ -273,7 +296,7 @@ def main() -> None:
         )
     )
 
-    pipeline = make_pipeline(date_cols, text_cols)
+    pipeline = make_pipeline(date_cols, text_cols, numerical_cols)
 
     pipeline_model = pipeline.fit(filtered_features_with_dt)
     transformed_features = pipeline_model.transform(filtered_features_with_dt).select(

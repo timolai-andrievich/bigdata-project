@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd ~/project
-
 # Prepare data
 echo "Preparing data..."
 spark-submit --master yarn scripts/stage_3/prepare_data.py
@@ -15,8 +13,8 @@ echo "Finished copying data!"
 
 # Compress data
 echo "Compressing data..."
-zip data/train.zip data/train.json
-zip data/test.zip data/test.json
+gzip -k -9 data/train.json
+gzip -k -9 data/test.json
 echo "Finished compressing data!"
 
 # Train first and second models
