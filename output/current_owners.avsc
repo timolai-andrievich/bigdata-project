@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "current_owners",
+  "doc" : "Sqoop import of current_owners",
+  "fields" : [ {
+    "name" : "nft_address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "nft_address",
+    "sqlType" : "12"
+  }, {
+    "name" : "token_id",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "token_id",
+    "sqlType" : "12"
+  }, {
+    "name" : "owner",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "owner",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "current_owners"
+}

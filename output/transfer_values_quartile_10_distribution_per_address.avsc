@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "transfer_values_quartile_10_distribution_per_address",
+  "doc" : "Sqoop import of transfer_values_quartile_10_distribution_per_address",
+  "fields" : [ {
+    "name" : "address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "address",
+    "sqlType" : "12"
+  }, {
+    "name" : "quartiles",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "quartiles",
+    "sqlType" : "12"
+  }, {
+    "name" : "relative_value",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "relative_value",
+    "sqlType" : "7"
+  } ],
+  "tableName" : "transfer_values_quartile_10_distribution_per_address"
+}

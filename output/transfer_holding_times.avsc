@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "transfer_holding_times",
+  "doc" : "Sqoop import of transfer_holding_times",
+  "fields" : [ {
+    "name" : "days",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "days",
+    "sqlType" : "4"
+  }, {
+    "name" : "num_holds",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "num_holds",
+    "sqlType" : "4"
+  } ],
+  "tableName" : "transfer_holding_times"
+}

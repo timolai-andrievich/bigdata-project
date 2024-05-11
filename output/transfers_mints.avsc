@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "transfers_mints",
+  "doc" : "Sqoop import of transfers_mints",
+  "fields" : [ {
+    "name" : "transfer_id",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "transfer_id",
+    "sqlType" : "12"
+  }, {
+    "name" : "mint_id",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "mint_id",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "transfers_mints"
+}

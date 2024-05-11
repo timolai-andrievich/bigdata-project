@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "checkpoint",
+  "doc" : "Sqoop import of checkpoint",
+  "fields" : [ {
+    "name" : "event_type",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "event_type",
+    "sqlType" : "12"
+  }, {
+    "name" : "offset_",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "offset_",
+    "sqlType" : "4"
+  } ],
+  "tableName" : "checkpoint"
+}

@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "market_values_distribution",
+  "doc" : "Sqoop import of market_values_distribution",
+  "fields" : [ {
+    "name" : "address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "address",
+    "sqlType" : "12"
+  }, {
+    "name" : "token_id",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "token_id",
+    "sqlType" : "12"
+  }, {
+    "name" : "relative_value",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "relative_value",
+    "sqlType" : "7"
+  } ],
+  "tableName" : "market_values_distribution"
+}

@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "nfts",
+  "doc" : "Sqoop import of nfts",
+  "fields" : [ {
+    "name" : "address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "address",
+    "sqlType" : "12"
+  }, {
+    "name" : "name",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "name",
+    "sqlType" : "12"
+  }, {
+    "name" : "symbol",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "symbol",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "nfts"
+}

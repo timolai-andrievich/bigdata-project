@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "current_market_values",
+  "doc" : "Sqoop import of current_market_values",
+  "fields" : [ {
+    "name" : "nft_address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "nft_address",
+    "sqlType" : "12"
+  }, {
+    "name" : "token_id",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "token_id",
+    "sqlType" : "12"
+  }, {
+    "name" : "market_value",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "market_value",
+    "sqlType" : "7"
+  } ],
+  "tableName" : "current_market_values"
+}

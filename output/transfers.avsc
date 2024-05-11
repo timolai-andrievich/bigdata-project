@@ -1,0 +1,61 @@
+{
+  "type" : "record",
+  "name" : "transfers",
+  "doc" : "Sqoop import of transfers",
+  "fields" : [ {
+    "name" : "event_id",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "event_id",
+    "sqlType" : "12"
+  }, {
+    "name" : "transaction_hash",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "transaction_hash",
+    "sqlType" : "12"
+  }, {
+    "name" : "block_number",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "block_number",
+    "sqlType" : "4"
+  }, {
+    "name" : "nft_address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "nft_address",
+    "sqlType" : "12"
+  }, {
+    "name" : "token_id",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "token_id",
+    "sqlType" : "12"
+  }, {
+    "name" : "from_address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "from_address",
+    "sqlType" : "12"
+  }, {
+    "name" : "to_address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "to_address",
+    "sqlType" : "12"
+  }, {
+    "name" : "transaction_value",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "transaction_value",
+    "sqlType" : "7"
+  }, {
+    "name" : "timestamp",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "timestamp",
+    "sqlType" : "4"
+  } ],
+  "tableName" : "transfers"
+}

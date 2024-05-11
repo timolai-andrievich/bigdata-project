@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "transfer_statistics_by_address",
+  "doc" : "Sqoop import of transfer_statistics_by_address",
+  "fields" : [ {
+    "name" : "address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "address",
+    "sqlType" : "12"
+  }, {
+    "name" : "transfers_out",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "transfers_out",
+    "sqlType" : "4"
+  }, {
+    "name" : "transfers_in",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "transfers_in",
+    "sqlType" : "4"
+  } ],
+  "tableName" : "transfer_statistics_by_address"
+}

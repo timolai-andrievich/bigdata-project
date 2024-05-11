@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "ownership_transitions",
+  "doc" : "Sqoop import of ownership_transitions",
+  "fields" : [ {
+    "name" : "from_address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "from_address",
+    "sqlType" : "12"
+  }, {
+    "name" : "to_address",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "to_address",
+    "sqlType" : "12"
+  }, {
+    "name" : "num_transitions",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "num_transitions",
+    "sqlType" : "4"
+  } ],
+  "tableName" : "ownership_transitions"
+}

@@ -1,0 +1,140 @@
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- Setting Hive options
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SET hive.exec.dynamic.partition = true;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SET hive.exec.dynamic.partition.mode = nonstrict;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SET hive.exec.compress.output=true;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SET avro.output.codec=snappy;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SET hive.execution.engine=mr;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- (Re)create the team database
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP DATABASE IF EXISTS team31_projectdb CASCADE;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE DATABASE team31_projectdb LOCATION "project/hive/warehouse";
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> USE team31_projectdb;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- Import tables
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE checkpoint STORED AS AVRO LOCATION 'project/warehouse/checkpoint' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/checkpoint.avsc') ;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE current_market_values STORED AS AVRO LOCATION 'project/warehouse/current_market_values' TBLPROPERTIES ('avro.schema.url'='project/warehouse/ avsc/current_market_values.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE current_owners STORED AS AVRO LOCATION 'project/warehouse/current_owners' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/current_o wners.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE market_values_distribution STORED AS AVRO LOCATION 'project/warehouse/market_values_distribution' TBLPROPERTIES ('avro.schema.url'='project/ warehouse/avsc/market_values_distribution.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE mint_holding_times STORED AS AVRO LOCATION 'project/warehouse/mint_holding_times' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/m int_holding_times.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE mints STORED AS AVRO LOCATION 'project/warehouse/mints' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/mints.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE nfts STORED AS AVRO LOCATION 'project/warehouse/nfts' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/nfts.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE ownership_transitions STORED AS AVRO LOCATION 'project/warehouse/ownership_transitions' TBLPROPERTIES ('avro.schema.url'='project/warehouse/ avsc/ownership_transitions.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_holding_times STORED AS AVRO LOCATION 'project/warehouse/transfer_holding_times' TBLPROPERTIES ('avro.schema.url'='project/warehous e/avsc/transfer_holding_times.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfers STORED AS AVRO LOCATION 'project/warehouse/transfers' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfers.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfers_mints STORED AS AVRO LOCATION 'project/warehouse/transfers_mints' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfe rs_mints.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_statistics_by_address STORED AS AVRO LOCATION 'project/warehouse/transfer_statistics_by_address' TBLPROPERTIES ('avro.schema.url'=' project/warehouse/avsc/transfer_statistics_by_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_values_quantile_10_distribution_per_address STORED AS AVRO LOCATION 'project/warehouse/transfer_values_quantile_10_distribution_per _address' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_values_quantile_10_distribution_per_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_values_quantile_25_distribution_per_address STORED AS AVRO LOCATION 'project/warehouse/transfer_values_quantile_25_distribution_per _address' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_values_quantile_25_distribution_per_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_values_quartile_10_distribution_per_address STORED AS AVRO LOCATION 'project/warehouse/transfer_values_quartile_10_distribution_per _address' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_values_quartile_10_distribution_per_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- Partition and cluster the current_owners table
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE IF EXISTS current_owners_partitioned;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE current_owners_partitioned (
+. . . . . . . . . . . . . . . . . . . . . . .>   nft_address STRING,
+. . . . . . . . . . . . . . . . . . . . . . .>   token_id STRING,
+. . . . . . . . . . . . . . . . . . . . . . .>   owner STRING
+. . . . . . . . . . . . . . . . . . . . . . .> ) PARTITIONED BY (first_address_letter STRING)
+. . . . . . . . . . . . . . . . . . . . . . .> CLUSTERED BY (token_id) INTO 10 BUCKETS
+. . . . . . . . . . . . . . . . . . . . . . .> STORED AS AVRO LOCATION 'project/hive/warehouse/current_owners_part';
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO TABLE current_owners_partitioned PARTITION (first_address_letter)
+. . . . . . . . . . . . . . . . . . . . . . .> SELECT *, substr(nft_address, 3, 1) as first_address_letter FROM current_owners;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE current_owners;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- ALTER TABLE current_owners_partitioned RENAME TO cu rrent_owners;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- Check if the data can be accessed
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SELECT * FROM current_owners_partitioned LIMIT 10;
++---------------------------------------------+--------------------------------------+---------------------------------------------+--------------------------------------------------+
+|   current_owners_partitioned.nft_address    | current_owners_partitioned.token_id  |      current_owners_partitioned.owner       | current_owners_partitioned.first_address_letter  |
++---------------------------------------------+--------------------------------------+---------------------------------------------+--------------------------------------------------+
+| 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d  | 2005212                              | 0xD407BC1708209DEdAE37a026402c4d1dA2fC75C5  | 0                                                |
+| 0x0Cfb5d82BE2b949e8fa73A656dF91821E2aD99FD  | 281487861615816                      | 0x078ad2Aa3B4527e4996D087906B2a3DA51BbA122  | 0                                                |
+| 0x07BbDaf30e89ea3Ecf6CaDC80D6e7c4b0843c729  | 1115                                 | 0x6e21b422aC130E4f78991d89FcA78CDf54c802f5  | 0                                                |
+| 0x06aF447c72E18891FB65450f41134C00Cf7Ac28c  | 3807                                 | 0xC3d46465Bda08b82D140d06a17f4efD0F3B62C3a  | 0                                                |
+| 0x0Cfb5d82BE2b949e8fa73A656dF91821E2aD99FD  | 281487861616590                      | 0x949DDde247DFb4c4cA2eeD6B51b065bF40BC20a8  | 0                                                |
+| 0x0Cfb5d82BE2b949e8fa73A656dF91821E2aD99FD  | 281487861616770                      | 0x25054f27C9972B341Aee6c0D373A652566075431  | 0                                                |
+| 0x0Cfb5d82BE2b949e8fa73A656dF91821E2aD99FD  | 281487861617139                      | 0x82Bb6B5e92E1143fC03ee468a7Ba9Df8e955f7c2  | 0                                                |
+| 0x0Cfb5d82BE2b949e8fa73A656dF91821E2aD99FD  | 281487861617508                      | 0xA01F3bA860eE63aCecF8A362D2a4B4307E4274B7  | 0                                                |
+| 0x0Cfb5d82BE2b949e8fa73A656dF91821E2aD99FD  | 281487861617607                      | 0x90dcE282B4cf86BbBB24F8E9E01904e198606E53  | 0                                                |
+| 0x0322b8fCc82f28aB412A24E0FEa6CC0ac80B6c0F  | 6796                                 | 0x07b1FA1fDb6f588d1Ef95BabB6De2f05881B7091  | 0                                                |
++---------------------------------------------+--------------------------------------+---------------------------------------------+--------------------------------------------------+
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- Bucket all other tables
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE checkpoint_clustered CLUSTERED B Y (event_type) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/checkpoint_clustered'  TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/checkpoint.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO checkpoint_clustered SELECT * FROM checkpo int;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE checkpoint;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE checkpoint_clustered RENAME TO checkpoint; 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE current_market_values_clustered  CLUSTERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/current_marke t_values_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/current_market_values.av sc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO current_market_values_clustered SELECT * F ROM current_market_values;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE current_market_values;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE current_market_values_clustered RENAME TO  current_market_values;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- CREATE EXTERNAL TABLE current_owners_clustered CLUS TERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/current_owners_cl ustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/current_owners.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- INSERT INTO current_owners_clustered SELECT * FROM  current_owners;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- DROP TABLE current_owners;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> -- ALTER TABLE current_owners_clustered RENAME TO curr ent_owners;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE market_values_distribution_clust ered CLUSTERED BY (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/market_v alues_distribution_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/market_values_ distribution.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO market_values_distribution_clustered SELEC T * FROM market_values_distribution;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE market_values_distribution;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE market_values_distribution_clustered RENAM E TO market_values_distribution;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE mint_holding_times_clustered CLU STERED BY (days) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/mint_holding_times_c lustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/mint_holding_times.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO mint_holding_times_clustered SELECT * FROM  mint_holding_times;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE mint_holding_times;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE mint_holding_times_clustered RENAME TO min t_holding_times;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE mints_clustered CLUSTERED BY (to ken_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/mints_clustered' TBLPROPERTIE S ('avro.schema.url'='project/warehouse/avsc/mints.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO mints_clustered SELECT * FROM mints;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE mints;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE mints_clustered RENAME TO mints;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE nfts_clustered CLUSTERED BY (add ress) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/nfts_clustered' TBLPROPERTIES ( 'avro.schema.url'='project/warehouse/avsc/nfts.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO nfts_clustered SELECT * FROM nfts;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE nfts;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE nfts_clustered RENAME TO nfts;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE ownership_transitions_clustered  CLUSTERED BY (from_address) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/ownership _transitions_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/ownership_transition s.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO ownership_transitions_clustered SELECT * F ROM ownership_transitions;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE ownership_transitions;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE ownership_transitions_clustered RENAME TO  ownership_transitions;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_holding_times_clustered  CLUSTERED BY (days) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/transfer_holding _times_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfer_holding_times.avs c');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO transfer_holding_times_clustered SELECT *  FROM transfer_holding_times;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE transfer_holding_times;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE transfer_holding_times_clustered RENAME TO  transfer_holding_times;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfers_clustered CLUSTERED BY  (token_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/transfers_clustered' TBLP ROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfers.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO transfers_clustered SELECT * FROM transfer s;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE transfers;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE transfers_clustered RENAME TO transfers;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfers_mints_clustered CLUSTE RED BY (transfer_id) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/transfers_mints_ clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfers_mints.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO transfers_mints_clustered SELECT * FROM tr ansfers_mints;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE transfers_mints;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE transfers_mints_clustered RENAME TO transf ers_mints;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_statistics_by_address_c lustered CLUSTERED BY (address) INTO 10 BUCKETS STORED AS AVRO LOCATION 'project/hive/warehouse/trans fer_statistics_by_address_clustered' TBLPROPERTIES ('avro.schema.url'='project/warehouse/avsc/transfe r_statistics_by_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO transfer_statistics_by_address_clustered S ELECT * FROM transfer_statistics_by_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE transfer_statistics_by_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE transfer_statistics_by_address_clustered R ENAME TO transfer_statistics_by_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_values_quantile_10_dist ribution_per_address_clustered CLUSTERED BY (address) INTO 10 BUCKETS STORED AS AVRO LOCATION 'projec t/hive/warehouse/transfer_values_quantile_10_distribution_per_address_clustered' TBLPROPERTIES ('avro .schema.url'='project/warehouse/avsc/transfer_values_quantile_10_distribution_per_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO transfer_values_quantile_10_distribution_p er_address_clustered SELECT * FROM transfer_values_quantile_10_distribution_per_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE transfer_values_quantile_10_distribution_pe r_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE transfer_values_quantile_10_distribution_p er_address_clustered RENAME TO transfer_values_quantile_10_distribution_per_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_values_quantile_25_dist ribution_per_address_clustered CLUSTERED BY (address) INTO 10 BUCKETS STORED AS AVRO LOCATION 'projec t/hive/warehouse/transfer_values_quantile_25_distribution_per_address_clustered' TBLPROPERTIES ('avro .schema.url'='project/warehouse/avsc/transfer_values_quantile_25_distribution_per_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO transfer_values_quantile_25_distribution_p er_address_clustered SELECT * FROM transfer_values_quantile_25_distribution_per_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE transfer_values_quantile_25_distribution_pe r_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE transfer_values_quantile_25_distribution_p er_address_clustered RENAME TO transfer_values_quantile_25_distribution_per_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE EXTERNAL TABLE transfer_values_quartile_10_dist ribution_per_address_clustered CLUSTERED BY (address) INTO 10 BUCKETS STORED AS AVRO LOCATION 'projec t/hive/warehouse/transfer_values_quartile_10_distribution_per_address_clustered' TBLPROPERTIES ('avro .schema.url'='project/warehouse/avsc/transfer_values_quartile_10_distribution_per_address.avsc');
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO transfer_values_quartile_10_distribution_p er_address_clustered SELECT * FROM transfer_values_quartile_10_distribution_per_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE transfer_values_quartile_10_distribution_pe r_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> ALTER TABLE transfer_values_quartile_10_distribution_p er_address_clustered RENAME TO transfer_values_quartile_10_distribution_per_address;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
